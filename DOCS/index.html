@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="keywords" content="project, infoiasi, web, staw, PiColo" /> 
+    <title>PiColo</title>
+    <link rel="stylesheet" href="css/scholarly.min.css">
+    <script src="js/scholarly.min.js"></script>
+  </head>
+  <body prefix="schema: http://schema.org">
+    <header>
+      <h1>PiColo</h1>
+      <h2>Documentatie</h2>
+    </header>
+    <div>
+      <dl>
+        <dt>Autori</dt>
+        <dd>
+          Agarafine Beniamin Andrei
+        </dd>
+        <dd>
+          Paunescu Andrei-Alexandru
+        </dd>
+    </div>
+    <section id="introduction" role="doc-introduction">
+      <h2>1.Introducere</h2>
+      <p>
+        Aplicatie de tip service worker pentru optimizarea imaginilor de pe pagini web.
+      </p>
+      <p>
+        Aplicatia are urmatoarele caracteristici:
+      </p>
+      <ul>
+        <li>Utilizatorul va putea gestiuna o multitudine de service workers pentru diferite domenii.</li>
+        <li>Utilizatorul va putea seta diferiti parametrii pentru service worker-ul de pe un anumit domeniu.</li>
+        <li>Service worker-ul va optimiza imaginile de pe pagini web folosing parametrii setati de utilizator.</li>
+        <li>Acesta va trimite inapoi imaginile optimizate.</li>
+      </ul>
+    </section>
+    <section id="tehnologii">
+      <h2>2.Tehnologii</h2>
+      <p>
+        Tehnologiile folosite in creearea acestei aplicatii sunt afisate mai jos.
+      </p>
+      <section id="article">
+        <h3>2.1. HTML</h3>
+        <p>
+          HyperText Markup Language (HTML) este un limbaj de marcare utilizat pentru crearea paginilor web ce pot fi afisate intr-un browser (sau navigator). 
+          Scopul HTML este mai degraba prezentarea informatiilor – paragrafe, fonturi, tabele s.a.m.d. – decat descrierea semanticii documentului.
+        </p>
+      </section>
+      <section id="article">
+        <h3>2.2. CSS</h3>
+        <p>
+            CSS (Cascading Style Sheets) este un standard pentru formatarea elementelor unui document HTML. 
+            Stilurile se pot atașa elementelor HTML prin intermediul unor fisiere externe sau direct in cadrul documentului html.
+        </p>
+        </section>
+      <section id="article">
+        <h3>2.3. JavaScript</h3>
+          <p>
+              JavaScript (JS) este un limbaj de programare orientat obiect bazat pe conceptul prototipurilor. 
+              Este folosit mai ales pentru introducerea unor funcționalitati în paginile web, 
+              codul JavaScript din aceste pagini fiind rulat de catre browser.
+          </p>
+      </section>
+      <section id="article">
+          <h3>2.4. GitHub</h3>
+            <p>
+                GitHub este un serviciu de gazduire web pentru proiecte de dezvoltare a software-ului care utilizeaza sistemul de control al versiunilor Git. 
+            </p>
+      </section>
+    </section>
+      <section id="structura">
+        <h3>3.Arhitectura aplicatiei</h3>
+        <section id="article">
+          <h3>Structura generala a aplicatiei</h3>
+            <figure typeof = "schema:Image"></figure>
+              <img src="imgs/schema_generala.png" alt="schema_generala" style="max-height:100%; max-width:100%;">
+              <figcaption style="text-align: center; font-size: 14px;">Structura generala aplicatie</figcaption>
+            </figure>
+        </section>
+
+        <section id="article">
+            <h3>3.1. Structura generala a serviciului</h3>
+              <p>
+                Service worker-ul intercepteaza toate requesturile pentru imagini si trimite un raspuns cu imaginile procesate de catre backend.
+              </p>
+              <figure typeof = "schema:Image"></figure>
+                <img src="imgs/backend_diagram.PNG" alt="backend_diagram" style="max-height:100%; max-width:100%;">
+                <figcaption style="text-align: center; font-size: 14px;">Schema generala backend</figcaption>
+              </figure>
+              <p>
+                Service worker-ul functioneaza astfel:
+                <ol>
+                  <dd>ー Acesta intercepteaza toate requesturile pentru imagini.</dd>
+                  <dd>ー Acesta trimite requesturile la backend cu parametrii specificati.</dd>
+                  <dd>ー Backend-ul verifica daca requesturile sunt deja procesate.</dd>
+                  <dd>ー In cazul in care imaginile au fost deja procesate se va trimite imagine din cache.</dd>
+                  <dd>ー In caz contrar, incep procesarea imaginii.</dd>
+                </ol>
+              </p>
+        </section>
+      </section>
+
+      <section id="mod_utilizare">
+        <h3>4.Mod de utilizare</h3>
+        <p>
+          Mai jos este descris un scenariu normal de utilizare a aplicatiei.
+        </p>
+
+        <section id="article">
+            <h3>4.1. Gestionare</h3>
+            <p>
+              Utilizatorul va putea sa acceseze o pagina unde va putea sa gestioneaze diversi service workeri pentru diferite domenii.
+            </p>
+            <figure typeof = "schema:Image"></figure>
+              <!-- <img src="imgs/img.png" alt="img" style="max-height:100%; max-width:100%;"> -->
+              <!-- <figcaption style="text-align: center; font-size: 14px;">Pagina gestionare</figcaption> -->
+            </figure>
+        </section>
+
+        <section id="article">
+            <h3>4.2. Setare parametrii</h3>
+            <p>
+              Utilizatorul va putea seta diversi parametrii privind procesarea imaginilor.
+              <ol>
+                <dd>ー Specificare tipului de compresie (lossy/lossless).</dd>
+                <dd>ー Specificarea watermark-ului pe imaginile procesate.</dd>
+                <dd>ー Configurarea printr-o expresie regulata URL-urile imaginilor.</dd>
+              </ol>
+            </p>
+            <figure typeof = "schema:Image"></figure>
+              <!-- <img src="imgs/img.png" alt="img" style="max-height:100%; max-width:100%;">  
+              <figcaption style="text-align: center; font-size: 14px;">Pagina parametrii</figcaption> -->
+            </figure>
+        </section>
+        
+        <section id="article">
+            <h3>4.3. Adaugarea worker-ului.</h3>
+            <p>
+              Utilizatorul va adauga service worker-ul generat in paginile in care doreste sa recompreseze imaginile.
+            </p>
+            <figure typeof = "schema:Image"></figure>
+              <!-- <img src="imgs/img.png" alt="img" style="max-height:100%; max-width:100%;">  
+              <figcaption style="text-align: center; font-size: 14px;">Pagina parametrii</figcaption> -->
+            </figure>
+        </section>
+
+      <section id="dezvoltare">
+        <h3>5.Dezvoltare</h3>
+        <p>
+          Aplicatia a fost dezvoltata in mai multe etape.
+        </p>
+        <ol>
+          <li>Dezvoltarea generarii de service workeri:</li>
+            <dd>ー Creearea unui sistem de generare de service workeri in functie de utilizator, domeniu si parametrii.</dd>
+          <li>Dezvoltarea service worker-ului:</li>
+            <dd>ー Preluare requesturilor si returnarea de raspunsuri.</dd>
+          <li>Dezvoltarea procesarii de imagini:</li>
+            <dd>ー Implementarea compresiei imaginilor in functie de parametrii setati de utilizator.</dd>
+          <li>Dezvoltarea unui front-end minimal pentru utilizator:</li>
+            <dd>ー Dezvoltare unui front-end pentru gestionare.</dd>
+        </ol>
+        <p>
+          Au fost folosite diferite API-uri.
+        </p>
+        <ol>
+          <li>API pentru procesare de imagini.</li>
+          <li>API pentru accesarea bazei de date.</li>
+        </ol>
+      </section>
+    </section>
+  </body>
+</html>
