@@ -27,12 +27,11 @@
                     </ul>
                     <p class="menu-label">Configuration</p>
                     <ul class="menu-list">
-                        <li><a href="/ArchivR/public/MyAccount/index" class="active">Change your password</a></li>
-                        <li><a href="/ArchivR/public/Auth/logout">Logout</a></li>
+                        <li><a id="logout" href="/logout" onclick="logout()">Logout</a></li>
                     </ul>
                 </nav>
                 <article>
-                    <form id="setParams" action="setParams" method="POST" enctype="multipart/form-data">
+                    <form id="setParams" name='setParams' action="" method="POST" enctype="multipart/form-data">
                         <div id="step2" class="fieldset" style="margin-top:30px;">
                             <h3>Set service worker parameters</h3>
                             <div class="field">
@@ -65,14 +64,29 @@
             </div>
         </section>
         <script>
-            function checkSubmit(){
-                var compression_quality = document.getElementById('compression_quality').value;
-                var watermark = document.getElementById('watermark').value;
-                if(!compression_quality){
-                    document.getElementById('warning').innerHTML = "Please enter compression quality.";
-                    return false;
-                }
-                return true;
+            const myForm = document.getElementById('setParams');
+            document.getElementById('setParams').addEventListener('submit', function(e){
+                e.preventDefault();
+                const data = new FormData(myForm);
+                fetch('/setParams', 
+                    {
+                        method: "post",
+                        body: data
+                    }
+                ).then(function(response){
+                    return response.text();
+                }).then(function(text){
+                    document.getElementById('warning').innerHTML = text;
+                })
+
+            });
+
+            function logout(){
+                fetch("/logout", {
+                    method: "POST",
+                }).then(res => {
+                    console.log("Request complete! response:", res);
+                });
             }
 
         </script>
