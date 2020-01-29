@@ -79,6 +79,8 @@ app.post('/auth', function(request, response){
                             con.query(insertUsrPwd, [values], function(err, result, field){
                                 if(err){
                                     response.sendStatus(500);
+                                } else{
+                                    response.sendStatus(201);
                                 }
                             });
                         }
@@ -99,11 +101,7 @@ app.get('/dashboard', function(request, response){
 
 
 app.get('/dberror', function(request, response){
-    if (request.session.loggedin) {
-        response.sendFile(__dirname + "/public/dashboard.html");
-	} else {
-        response.sendFile(__dirname + "/public/loginerror.html");
-	}
+    response.sendFile(__dirname + "/public/dberror.html");
 });
 
 function get_sw_data(userid,swid) {

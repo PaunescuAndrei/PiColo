@@ -54,13 +54,16 @@
                         window.location.replace('/dashboard');
                     }
                     if(status == 401){
-                        document.getElementById('error').innerHTML = "Wrong username or password";
+                        document.getElementById('error').innerHTML = "Wrong username or password !";
                     }
                     if(status == 400){
-                        document.getElementById('error').innerHTML = "Username already exists";
+                        document.getElementById('error').innerHTML = "Username already exists !";
                     }
                     if(status == 500){
                         window.location.replace('/dberror');
+                    }
+                    if(status == 201){
+                        document.getElementById('error').innerHTML = "Username created !"
                     }
                 });
             })
