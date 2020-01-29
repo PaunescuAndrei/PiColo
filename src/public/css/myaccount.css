@@ -1,0 +1,19 @@
+.field:not(:last-child) {
+
+    margin-bottom: .75rem;
+
+}
+
+.label {
+    color: #bdc3c7;
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+}
+.input {
+    background-color: #fff;
+    border: 0;
+    max-width: 100%;
+    width: 60%;
+    height: 27px;
+}

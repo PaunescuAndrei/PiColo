@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My account</title>
+        <link rel='stylesheet' type='text/css' href='css/style.css'/>
+        <link rel='stylesheet' type='text/css' href='css/myaccount.css'/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <section class = "section" style="display: block;">
+
+            <header>
+                <h1 class="title">PiColo</h1>
+                <h1 class="subtitle">
+                    Service Workers
+                </h1>
+                <hr>
+            </header>
+            <div id="main">
+                <nav>
+                    <p class="menu-label">General</p>
+                    <ul class="menu-list">
+                        <li><a href="/ArchivR/public/Upload/index">Upload</a></li>
+                        <li><a href="/ArchivR/public/MyArchives/index">My archives</a></li>
+                    </ul>
+                    <p class="menu-label">Configuration</p>
+                    <ul class="menu-list">
+                        <li><a href="/ArchivR/public/MyAccount/index" class="active">Change your password</a></li>
+                        <li><a href="/ArchivR/public/Auth/logout">Logout</a></li>
+                    </ul>
+                </nav>
+                <article>
+                    <form id="setParams" action="setParams" method="POST" enctype="multipart/form-data">
+                        <div id="step2" class="fieldset" style="margin-top:30px;">
+                            <h3>Set service worker parameters</h3>
+                            <div class="field">
+                                <label class="label">Compression type:</label>
+                                <div class="control">
+                                    <input type="radio" name="lossy" value="1" checked="checked"> Lossy <br>
+                                    <input type="radio" name="lossy" value="0"> Lossless <br>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Compression quality</label>
+                                <div class="control">
+                                    <input id="compression_quality" class="input" type="number" name="quality" min="1" max="100">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Add watermark</label>
+                                <div class="control">
+                                    <input id="watermark" class="btn btn-red" type="file" name="watermark" accept="image/*">
+                                </div>
+                            </div>
+                            <br>
+                            <div style="text-align: center">
+                                <input id="submit" type="submit" class="btn btn-blue" value="Set parameters" id="fileUpload">		
+                            </div>
+                            <p id="warning" class="label"></p>
+                        </div>
+                    </form>
+                </article>
+            </div>
+        </section>
+        <script>
+            function checkSubmit(){
+                var compression_quality = document.getElementById('compression_quality').value;
+                var watermark = document.getElementById('watermark').value;
+                if(!compression_quality){
+                    document.getElementById('warning').innerHTML = "Please enter compression quality.";
+                    return false;
+                }
+                return true;
+            }
+
+        </script>
+    </body>
+</html>
