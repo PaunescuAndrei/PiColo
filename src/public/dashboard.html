@@ -44,7 +44,7 @@
                             <div class="field">
                                 <label class="label">Compression quality</label>
                                 <div class="control">
-                                    <input id="compression_quality" class="input" type="number" name="quality" min="1" max="100">
+                                    <input id="compression_quality" class="input" type="number" name="quality" min="1" max="100" required>
                                 </div>
                             </div>
                             <div class="field">
@@ -68,13 +68,13 @@
             document.getElementById('setParams').addEventListener('submit', function(e){
                 e.preventDefault();
                 const data = new FormData(myForm);
-                fetch('/setParams', 
+                fetch('/addSW', 
                     {
                         method: "post",
                         body: data
                     }
                 ).then(function(response){
-                    return response.text();
+                    return response.status;
                 }).then(function(text){
                     document.getElementById('warning').innerHTML = text;
                 })
