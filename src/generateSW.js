@@ -74,15 +74,4 @@ self.addEventListener('activate', function activator(event) {
     fs.writeFileSync(target_location,sw);
 }
 
-function addSW(userid){
-    //add sw for this user and get swid at the same time
-    // connection.query('INSERT INTO posts SET ?', {title: 'test'}, function (error, results, fields) {
-    //     if (error) throw error;
-    //     console.log(results.insertId);
-    //   });
-    //https://github.com/mysqljs/mysql#getting-the-id-of-an-inserted-row
-    generateSW('http://localhost:3000',userid,swid,__dirname +`/${userid}/${swid}/`);
-    //upload watermark in this folder too.
-}
-
-generateSW('http://localhost:3000',100,1,'sw.js');
+module.exports = {generateSW}

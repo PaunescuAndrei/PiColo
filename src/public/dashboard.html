@@ -67,17 +67,20 @@
             document.getElementById('setParams').addEventListener('submit', function(e){
                 e.preventDefault();
                 const data = new FormData(myForm);
+                for (let [key, value] of data.entries()) { 
+                    console.log(key, value);
+                }
                 fetch('/addSW', 
                     {
                         method: "post",
-                        body: data
+                        // credentials: 'include',
+                        body: data,
                     }
                 ).then(function(response){
-                    return response.status;
+                    return response.text();
                 }).then(function(text){
                     document.getElementById('warning').innerHTML = text;
                 })
-
             });
 
             function logout(){

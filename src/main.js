@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var express = require('express');
-var session = require('express-session');
+const session = require('express-session');
 var bodyParser = require('body-parser');
 var path = require('path');
 var crypto = require('crypto');
@@ -9,8 +9,10 @@ const compression = require('compression');
 const cors = require('cors');
 const sharp = require('sharp');
 const axios = require('axios');
-const fs = require('fs')
+const fs = require('fs');
+const genSW = require('./generateSW.js');
 
+const server_adress = "http://localhost:7777";
 
 var con = mysql.createConnection({
 	host     : 'localhost',
@@ -30,10 +32,13 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+
 app.use(session({
     secret: 'mysupersecretsecret',
-    resave: true,
-    saveUninitialized: true
+	resave: true,
+	name: 'picolo',
+	saveUninitialized: true,
+	cookie: {maxAge: 999999},
 }));
 
 app.use("/", express.static(path.join(__dirname, 'public')));
@@ -62,7 +67,7 @@ app.post('/auth', function(request, response){
                         if(result.length > 0) {
                             request.session.loggedin = true;
                             request.session.username = username;
-                            request.session.user_id = result[0].id;
+							request.session.user_id = result[0].id;
                             response.sendStatus(200);
                         }else {
                             response.sendStatus(401);
@@ -102,6 +107,9 @@ app.get('/dashboard', function(request, response){
 
 app.get('/dberror', function(request, response){
     response.sendFile(__dirname + "/public/dberror.html");
+});
+app.get('/users/*', function(request, response){
+	response.download(__dirname+request.url);
 });
 
 function get_sw_data(userid,swid) {
@@ -215,15 +223,6 @@ async function processImg(image,userid,swid,webp) {
 		}
 	}
 
-
-	// const imgpath = `${__dirname}/users/${userid}/${swid}/${name}$.${ext}`;
-	// try {
-	// 	if (fs.existsSync(imgpath)) {
-	// 		return imgpath;
-	// 	}
-	// } catch(err) {
-	// 	console.error(err);
-	// }
 	console.log(imgpath);
 
 	//read image and it's metadata
@@ -274,7 +273,9 @@ app.post('/addSW',async function(request, response) {
 		  console.error('Error', err)
 		  response.sendStatus(400)
 		}
-        const userid = request.session.user_id;
+		const userid = request.session.user_id;
+		const lossy = fields.lossy;
+		const quality = fields.quality;
         
         
         var watermark;
@@ -284,9 +285,10 @@ app.post('/addSW',async function(request, response) {
 		}else{
             watermark = 0;
         };
-		const id = await add_sw(userid,watermark,fields.lossy,fields.quality);
+		const id = await add_sw(userid,watermark,lossy,quality);
+		console.log(id);
 
-        const location = `${__dirname}/users/${userid}/${id}/data/`;
+		const location = `${__dirname}/users/${userid}/${id}/data/`;
 		const newpath = `${location}/watermark.png`;
 
 		// if watermark picture doesn't exists update the values for inserting in db
@@ -297,22 +299,26 @@ app.post('/addSW',async function(request, response) {
             }catch(err){
                 console.log(err);
             }
-        }
-		if(id){
+		}
+		link = `<a href="./users/${userid}/${id}/data/sw.js">Download</a>`
+			if(id){
 			if(watermark == 1){
 				fs.rename(files.watermark.path, newpath, function (err) {
 				if (err){
 					console.error('Error',err)
 					response.sendStatus(400);
 				}else{
-					response.sendStatus(200);
+					genSW.generateSW(server_adress,userid,id,`${location}/sw.js`);
+					response.send(link);
 				}
 				});
 			}else{
-                response.sendStatus(200);
+				genSW.generateSW(server_adress,userid,id,`${location}/sw.js`);
+                response.send(link);
             }
 		}else{
-			response.sendStatus(200);
+			genSW.generateSW(server_adress,userid,id,`${location}/sw.js`);
+			response.send(link);
 		}
 	})
   })
@@ -338,8 +344,10 @@ app.post('/processImg',async function(request, response) {
 })
 
 app.get('/logout', function(request, response){
-    console.log(request.body);
-    request.session.destroy();
+	request.session.destroy();
+	// request.session = {};
+	// FileStore.destroy(request.sessionID);
+	// request.session.cookie.expires = new Date().getTime();
     response.redirect('/');
 });
 
