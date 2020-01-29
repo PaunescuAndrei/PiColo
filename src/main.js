@@ -67,6 +67,8 @@ app.post('/auth', function(request, response){
                             con.query(insertUsrPwd, [values], function(err, result, field){
                                 if(err){
                                     response.sendStatus(500);
+                                } else{
+                                    response.sendStatus(201);
                                 }
                             });
                         }
