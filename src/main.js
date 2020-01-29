@@ -87,11 +87,7 @@ app.get('/dashboard', function(request, response){
 
 
 app.get('/dberror', function(request, response){
-    if (request.session.loggedin) {
-        response.sendFile(__dirname + "/public/dashboard.html");
-	} else {
-        response.sendFile(__dirname + "/public/loginerror.html");
-	}
+    response.sendFile(__dirname + "/public/dberror.html");
 });
 
 // Make storage based on user / sw
