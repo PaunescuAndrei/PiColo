@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My account</title>
+        <link rel='stylesheet' type='text/css' href='css/style.css'/>
+        <link rel='stylesheet' type='text/css' href='css/myaccount.css'/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <style type="text/css">
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        </style>
+    </head>
+    <body onload="getSW()">
+        <section class = "section" style="display: block;">
+
+            <header>
+                <h1 class="title">PiColo</h1>
+                <h1 class="subtitle">
+                    Service Workers
+                </h1>
+                <hr>
+            </header>
+            <div id="main">
+                <nav>
+                    <p class="menu-label">General</p>
+                    <ul class="menu-list">
+                        <li><a href="/dashboard" onclick="goDashboard()">Settings</a></li>
+                        <li><a href="/mysw" class="active">My service workers</a></li>
+                    </ul>
+                    <p class="menu-label">Configuration</p>
+                    <ul class="menu-list">
+                        <li><a id="logout" href="/logout" onclick="logout()">Logout</a></li>
+                    </ul>
+                </nav>
+                <article>
+                    <div id="step2" class="fieldset" style="margin-top:30px;">
+                        <h3>Your files</h3>
+                        <div id="zipList">
+                            <table id="table">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>WATERMARK</th>
+                                    <th>LOSSY</th>
+                                    <th>QUALITY</th>
+                                    <th>DOWNLOAD</th>
+                                    <TH>DELETE</TH>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <script src="./js/mysw.js"></script>
+    </body>
+</html>

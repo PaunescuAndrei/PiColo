@@ -17,7 +17,7 @@ const server_adress = "http://localhost:7777";
 var con = mysql.createConnection({
 	host     : 'localhost',
     user     : 'root',
-    port     : '3308',
+    // port     : '3308',
 	password : '',
 	database : 'picolo_db'
 });
@@ -345,11 +345,16 @@ app.post('/processImg',async function(request, response) {
 
 app.get('/logout', function(request, response){
 	request.session.destroy();
-	// request.session = {};
-	// FileStore.destroy(request.sessionID);
-	// request.session.cookie.expires = new Date().getTime();
     response.redirect('/');
 });
+
+app.get('/mysw', function(request, response){
+	if(request.session.loggedin){
+		response.sendFile(__dirname + "/public/myserviceworkers.html");
+	} else{
+		response.sendFile(__dirname + "/public/logintoview.html");
+	}
+})
 
 app.get('/', function(request, response){
     if(request.session.loggedin){
@@ -359,8 +364,30 @@ app.get('/', function(request, response){
     }
 });
 
+app.get('/getSW', function(request, response){
+	user_id = request.session.user_id
+	con.query('SELECT * FROM scripts WHERE user_id = ?', [user_id], function(err, result, field){
+		if(err){
+			response.send("DB Error");
+		} else{
+			response.send(JSON.stringify(result));
+		}
+	});
+});
+
+app.post('/delSW', function(request, response){
+	var sw_id = request.body.sw_id;
+	con.query("DELETE FROM scripts WHERE id = ?", [sw_id], function(err, result, field){
+		if(err){
+			response.sendStatus(400);
+		} else{
+			response.sendStatus(200);
+		}
+	});
+});
+
 app.get('*', function(request, response){
-    response.sendFile(__dirname + "/public/404.html", 404);
+    response.sendFile(__dirname + "/public/404.html");
 });
 
 app.listen(7777);
