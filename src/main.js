@@ -26,7 +26,7 @@ var selectUsrPwd = 'select * from users where username = ? and password = ?';
 var selectUsr = 'select * from users where username = ?';
 var insertUsrPwd = 'insert into users (username, password) VALUES ?';
 
-var app = module.exports = express();
+var app = express();
 
 app.use(compression());
 app.use(cors());
