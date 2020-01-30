@@ -47,7 +47,6 @@ app.use(bodyParser.json());
 
 
 app.post('/auth', function(request, response){
-    
     new formidable.IncomingForm().parse(request, (err, fields, files) => {
         if (err) {
             console.error('Error', err)
@@ -108,10 +107,13 @@ app.get('/dashboard', function(request, response){
 app.get('/dberror', function(request, response){
     response.sendFile(__dirname + "/public/dberror.html");
 });
+
+// allow download for sw
 app.get('/users/*', function(request, response){
 	response.download(__dirname+request.url);
 });
 
+// return parameters for sw
 function get_sw_data(userid,swid) {
 	return new Promise((resolve, reject) => {
 	  con.query(
@@ -124,6 +126,7 @@ function get_sw_data(userid,swid) {
 	});
 }
 
+// check if image link is saved in the db
 function check_if_exists(swid,url){
 	return new Promise((resolve, reject) => {
 		con.query(
@@ -177,10 +180,13 @@ async function processImg(image,userid,swid,webp) {
 	var ext = stringList[stringList.length-1];
 	const name = pathList[pathList.length-1];
 	console.log(ext);
+
+	//exception for ico and bmp( sharp doesnt support bmp )
 	if (ext === 'ico' || ext == 'bmp'){
 		return null;
 	}
 
+	//get sw parameters
 	const sw_data = await get_sw_data(userid,swid);
 	const lossy = sw_data.is_lossy;
 	const watermark_exists = sw_data.watermark;
@@ -203,7 +209,7 @@ async function processImg(image,userid,swid,webp) {
 	var imgpath;
 	var insertName;
 	
-	//if img in database check if it exists localy and send else create it and insert it to the db
+	//if img in database check if it exists localy and send it, else create it and insert it to the db
 	if (imgDBname){
 		imgpath = `${__dirname}/users/${imgDBname}.${ext}`;
 		try {
@@ -215,9 +221,11 @@ async function processImg(image,userid,swid,webp) {
 		}
 	}else{
 		const uuid = get_uuid();
-		imgpath = `${__dirname}/users/${userid}/${swid}/${name}${uuid}.${ext}`;
-		insertName = `${userid}/${swid}/${name}${uuid}`;
-		const dir = `${__dirname}/users/${userid}/${swid}/`;
+		imgpath = `${__dirname}/users/${userid}/${swid}/${name}${uuid}.${ext}`; // path to the img
+		insertName = `${userid}/${swid}/${name}${uuid}`; // insert name for the db
+		const dir = `${__dirname}/users/${userid}/${swid}/`; //image directory
+
+		// create directory if it doesnt exist
 		if(!fs.existsSync(dir)){
 			fs.mkdirSync(dir, { recursive: true });
 		}
@@ -261,6 +269,7 @@ async function processImg(image,userid,swid,webp) {
 			}
 		}
 	}
+	// add the image to the db only after it was created successfully
     if (!imgDBname){
         await add_image(userid,swid,image,insertName);
     }
@@ -268,6 +277,8 @@ async function processImg(image,userid,swid,webp) {
 }
 
 app.post('/addSW',async function(request, response) {
+
+	// using formidable to access formData
 	new formidable.IncomingForm().parse(request,async (err, fields, files) => {
 		if (err) {
 		  console.error('Error', err)
@@ -279,20 +290,21 @@ app.post('/addSW',async function(request, response) {
         
         
         var watermark;
-
+		// check if watermark was uploaded
         if (files.watermark.size > 0){
 			watermark = 1;
 		}else{
             watermark = 0;
-        };
+		};
+		
+		// add sw to database
 		const id = await add_sw(userid,watermark,lossy,quality);
 		console.log(id);
 
 		const location = `${__dirname}/users/${userid}/${id}/data/`;
 		const newpath = `${location}/watermark.png`;
 
-		// if watermark picture doesn't exists update the values for inserting in db
-
+		// if the directory for sw storage doesnt exist create it
         if(!(fs.existsSync(location) == 1)){
             try{
                 fs.mkdirSync(location, { recursive: true });
@@ -301,7 +313,9 @@ app.post('/addSW',async function(request, response) {
             }
 		}
 		link = `<a href="./users/${userid}/${id}/data/sw.js">Download</a>`
-			if(id){
+
+		// generate sw and send link to download
+		if(id){
 			if(watermark == 1){
 				fs.rename(files.watermark.path, newpath, function (err) {
 				if (err){
@@ -328,9 +342,9 @@ app.post('/processImg',async function(request, response) {
     console.log('POST /')
     console.dir(request.body.img);
     if (request.body.img){
-      const name = await processImg(request.body.img,request.body.userid,request.body.swid,request.body.webp);
-      if (name){
-        response.sendFile(name);
+      const img_path = await processImg(request.body.img,request.body.userid,request.body.swid,request.body.webp);
+      if (img_path){
+        response.sendFile(img_path);
       }else{
         response.sendStatus(400);
       }
@@ -345,9 +359,6 @@ app.post('/processImg',async function(request, response) {
 
 app.get('/logout', function(request, response){
 	request.session.destroy();
-	// request.session = {};
-	// FileStore.destroy(request.sessionID);
-	// request.session.cookie.expires = new Date().getTime();
     response.redirect('/');
 });
 
