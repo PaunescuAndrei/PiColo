@@ -7,6 +7,14 @@ function isImage(fetchRequest) {
     return fetchRequest.method === "GET" && fetchRequest.destination === "image";
 }
 
+async function supportsWebp() {
+    if (!self.createImageBitmap) return 0;
+    
+    const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+    const blob = await fetch(webpData).then(r => r.blob());
+    return createImageBitmap(blob).then(() => 1, () => 0);
+}
+
 var webp = 0;
 const staticCacheName = 'processedImgCache';
 
@@ -25,7 +33,7 @@ event.respondWith(
     .then((response) => {
         if(isImage(event.request)){
             console.log(response.url);
-            url ='${server_url}'
+            url ='${server_url}/processImg'
             var body = 'userid=${userid}&swid=${swid}&webp='+webp+'&img='+response.url;
             var img = fetch(url, {  
                 method: 'post',  
@@ -60,10 +68,10 @@ event.respondWith(
 // Log SW installation
 self.addEventListener('install', function(event) {
     console.log('[SW]: installing....');
-    webp_browser = new URL(location).searchParams.get('webp');
-    if(webp_browser){
-        webp = webp_browser;
-    }
+
+    event.waitUntil(async function() {
+        webp  = await supportsWebp();
+    }());
 });
 
 // Log SW activation
