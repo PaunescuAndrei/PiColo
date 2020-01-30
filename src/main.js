@@ -17,7 +17,7 @@ const server_adress = "http://localhost:7777";
 var con = mysql.createConnection({
 	host     : 'localhost',
     user     : 'root',
-    // port     : '3308',
+    port     : '3308',
 	password : '',
 	database : 'picolo_db'
 });
@@ -194,9 +194,9 @@ async function processImg(image,userid,swid,webp) {
 
 
 	//check parameters to set the final extension after compression
-	if (webp == 1){
+	if (webp === 1){
 		ext = 'webp';
-	}else if(lossy == 1){
+	}else if(lossy === 1){
 		ext = 'jpeg';
 	}else{
 		ext ='png';
@@ -342,7 +342,7 @@ app.post('/processImg',async function(request, response) {
     console.log('POST /')
     console.dir(request.body.img);
     if (request.body.img){
-      const img_path = await processImg(request.body.img,request.body.userid,request.body.swid,request.body.webp);
+      const img_path = await processImg(request.body.img,request.body.userid,request.body.swid,parseInt(request.body.webp));
       if (img_path){
         response.sendFile(img_path);
       }else{

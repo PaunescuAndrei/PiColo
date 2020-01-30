@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    // port: '3308',
+    port: '3308',
     password: '',
     database: "picolo_db"
 });
