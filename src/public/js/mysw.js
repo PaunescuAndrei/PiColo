@@ -58,6 +58,10 @@ function getSW(){
             tr.appendChild(td);
 
             td = document.createElement('td');
+            td.innerHTML = watermark;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
             td.innerHTML = lossy;
             tr.appendChild(td);
 
@@ -65,9 +69,7 @@ function getSW(){
             td.innerHTML = quality;
             tr.appendChild(td);
 
-            td = document.createElement('td');
-            td.innerHTML = watermark;
-            tr.appendChild(td);
+
 
 
             // <button type="submit" name="login_button"  class="button" onclick="this.form.submited=this.value;" value="login">Log in</button>
