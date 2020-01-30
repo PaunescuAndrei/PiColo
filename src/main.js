@@ -395,6 +395,8 @@ app.post('/delSW', function(request, response){
 		if(err){
 			response.sendStatus(400);
 		} else{
+			var path = `./users/${request.session.user_id}/${sw_id}`;
+			fs.rmdirSync(path, { recursive: true });
 			response.sendStatus(200);
 		}
 	});
